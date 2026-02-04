@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Товары - Партнеры и товары</title>
+    <link rel="stylesheet" href="{% static 'partners/css/partners.css' %}">
+</head>
+<body>
+    <!-- Навигационное меню -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="logo-icon">🏢</span>
+                <h1>Уфанефть</h1>
+            </div>
+            <div class="navbar-menu">
+                <a href="{% url 'partners:sales' %}" class="nav-link active">Скидки</a>
+                <button class="btn-logout" onclick="logout()">Выход</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Поисковая строка -->
+    <div class="search-section">
+        <div class="search-container">
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Поиск предложений"
+            >
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Категории -->
+            <section class="categories-section">
+                <h2 class="section-title">Категории</h2>
+                <div class="categories-grid">
+                    {% for category in categories %}
+                    <div
+                        class="category-card"
+                        data-category-id="{{ category.id }}"
+                        onclick="filterByCategory({{ category.id }}, this)"
+                    >
+                        <div class="category-icon" style="background-color: {{ category.color }};">
+                            {{ category.icon }}
+                        </div>
+                        <div class="category-info">
+                            <h3>{{ category.name }}</h3>
+                            <p>{{ category.products.count }} предложений</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Товары/Предложения -->
+            <section class="products-section">
+                <h2 class="section-title">Скидки от партнеров</h2>
+                <div class="products-grid" id="productsGrid">
+                    {% for product in products %}
+                    <div
+                        class="product-card"
+                        data-category-id="{{ product.category.id }}"
+                        onclick="openProductModal({{ product.id }})"
+                    >
+                        {% if product.image_url %}
+                        <div class="product-image">
+                            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                        </div>
+                        {% else %}
+                        <div class="product-image placeholder">
+                            🏷️
+                        </div>
+                        {% endif %}
+
+                        <div class="product-body">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <p class="product-description">{{ product.short_description }}</p>
+                            <div class="product-meta">
+                                <span class="offer-count">
+                                    📦 {{ product.count_offers }} предложений
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <p>📭 Нет доступных товаров</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модальное окно для деталей товара -->
+    <div id="productModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeProductModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()">✕</button>
+
+            <div class="modal-body">
+                <div id="modalImage" class="modal-image placeholder">🏷️</div>
+
+                <div class="modal-info">
+                    <h2 id="modalName">Название товара</h2>
+                    <p id="modalDescription">Описание товара</p>
+
+                    <div class="modal-meta">
+                        <span id="modalOffers">📦 Предложений: 0</span>
+                    </div>
+
+                    <a
+                        id="modalLink"
+                        href="#"
+                        target="_blank"
+                        class="btn-marketplace"
+                    >
+                        Перейти на маркетплейс →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="{% static 'partners/js/partners.js' %}"></script>
+
+    <script>
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSearch();
+            initializeCategories();
+        });
+
+        // Открытие модального окна с информацией о товаре
+        function openProductModal(productId) {
+            fetch(`{% url 'partners:product_api' 0 %}`.replace('0', productId))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('modalName').textContent = data.name;
+                        document.getElementById('modalDescription').textContent = data.description;
+                        document.getElementById('modalOffers').textContent = `📦 ${data.count_offers} предложений`;
+
+                        const link = document.getElementById('modalLink');
+                        link.href = data.marketplace_url;
+
+                        if (data.image_url) {
+                            const modalImage = document.getElementById('modalImage');
+                            modalImage.innerHTML = `<img src="${data.image_url}" alt="${data.name}">`;
+                            modalImage.classList.remove('placeholder');
+                        }
+
+                        document.getElementById('productModal').classList.remove('hidden');
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+        }
+
+        // Закрытие модального окна
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        // Фильтрация по категории
+        function filterByCategory(categoryId, element) {
+            const cards = document.querySelectorAll('.product-card');
+
+            // Обновляем активную категорию
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Фильтруем товары
+            cards.forEach(card => {
+                if (categoryId === 0 || card.dataset.categoryId == categoryId) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Поиск товаров
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const cards = document.querySelectorAll('.product-card');
+
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+
+                cards.forEach(card => {
+                    const name = card.querySelector('.product-name').textContent.toLowerCase();
+                    const description = card.querySelector('.product-description').textContent.toLowerCase();
+
+                    if (name.includes(query) || description.includes(query)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Инициализация категорий
+        function initializeCategories() {
+            const firstCategory = document.querySelector('.category-card');
+            if (firstCategory) {
+                firstCategory.classList.add('active');
+            }
+        }
+
+        // Выход
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                window.location.href = '/partners/login/';
+            }
+        }
+
+        // Закрытие модального окна при нажатии на Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProductModal();
+            }
+        });
+    </script>
+</body>
+</html>
