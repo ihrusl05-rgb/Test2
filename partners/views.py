@@ -35,8 +35,21 @@ def get_product_details(request, product_id):
 
     return JsonResponse(data)
 
+
+"""Страница входа партнеров"""
 def login_page(request):
-    """Страница входа партнеров"""
-    return render(request, 'partners/login.html')
+    context  = {
+    'title': 'Партнеры',
+    'content': 'Уфанефть'
+    }
+    return render(request, 'partners/login.html', context)
 
 
+"""О нас"""
+def about(request):
+    context  = {
+    'title': 'Партнеры-о нас',
+    'content': 'О нас',
+    'text_on_page': 'Уфанефть - это экосистема для партнеров и клиентов, которая объединяет в себе широкий спектр услуг и продуктов. Наша миссия - создавать ценность для наших партнеров, предоставляя им доступ к инновационным решениям и поддержке на каждом этапе сотрудничества.'
+    }
+    return render(request, 'partners/about.html', context)
