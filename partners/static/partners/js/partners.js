@@ -66,126 +66,129 @@ const debouncedFilterProducts = debounce(filterProducts, 300);
 if (typeof module !== 'undefined' && module.exports) { module.exports = { openProductModal, closeProductModal, filterByCategory, logout }; }
 /* PARTNERS PAGE JAVASCRIPT
  * Управление интерактивностью страницы товаров и партнеров
- */
+// partners.js — чистая версия: обработка кликов, фильтрация и модал
+// Убраны дублирующие объявления и повторяющиеся блоки, чтобы избежать SyntaxError
 
-// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
 let currentCategory = 0;
 let currentSearchQuery = '';
 
-// ИНИЦИАЛИЗАЦИЯ
-document.addEventListener('DOMContentLoaded', function () {
-    initializeSearch();
-    initializeCategories();
-    initializeEventListeners();
-});
+document.addEventListener('DOMContentLoaded', init);
 
-// ПОИСК ТОВАРОВ
-function initializeSearch() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
-    searchInput.addEventListener('input', function (e) {
-        currentSearchQuery = e.target.value.toLowerCase().trim();
-        filterProducts();
-    });
-    searchInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            this.value = '';
-            currentSearchQuery = '';
-            filterProducts();
-        }
-    });
+function init() {
+    initSearch();
+    initCategories();
+    initEventListeners();
+    initLazyImages();
 }
 
-// КАТЕГОРИИ
-function initializeCategories() {
-    const categoryCards = document.querySelectorAll('.category-card');
-    categoryCards.forEach(card => {
+function initSearch() {
+    const input = document.getElementById('searchInput');
+    if (!input) return;
+    input.addEventListener('input', debounce(e => { currentSearchQuery = e.target.value.toLowerCase().trim(); filterProducts(); }, 200));
+    input.addEventListener('keydown', e => { if (e.key === 'Escape') { input.value = ''; currentSearchQuery = ''; filterProducts(); } });
+}
+
+function initCategories() {
+    document.querySelectorAll('.category-card').forEach(card => {
         card.addEventListener('click', function () {
-            const categoryId = parseInt(this.dataset.categoryId);
-            filterByCategory(categoryId, this);
+            const id = parseInt(this.dataset.categoryId) || 0;
+            currentCategory = id;
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            filterProducts();
         });
     });
-    const firstCategory = document.querySelector('.category-card');
-    if (firstCategory) firstCategory.classList.add('active');
+    const first = document.querySelector('.category-card'); if (first) first.classList.add('active');
 }
 
-function filterByCategory(categoryId, element) {
-    currentCategory = categoryId;
-    document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
-    element.classList.add('active');
-    filterProducts();
-}
-
-// ФИЛЬТРАЦИЯ ТОВАРОВ
 function filterProducts() {
     const cards = document.querySelectorAll('.product-card');
-    let visibleCount = 0;
+    let visible = 0;
     cards.forEach(card => {
-        const categoryId = parseInt(card.dataset.categoryId);
-        const name = card.querySelector('.product-name').textContent.toLowerCase();
-        const description = card.querySelector('.product-description').textContent.toLowerCase();
-        const categoryMatch = (currentCategory === 0 || categoryId === currentCategory);
-        const searchMatch = (currentSearchQuery === '' || name.includes(currentSearchQuery) || description.includes(currentSearchQuery));
-        if (categoryMatch && searchMatch) {
-            card.style.display = 'block';
-            visibleCount++;
-            setTimeout(() => { card.style.opacity = '1'; }, 10);
-        } else {
-            card.style.display = 'none';
-            card.style.opacity = '0';
-        }
+        const cid = parseInt(card.dataset.categoryId) || 0;
+        const name = (card.querySelector('.product-name')?.textContent || '').toLowerCase();
+        const desc = (card.querySelector('.product-description')?.textContent || '').toLowerCase();
+        const catMatch = (currentCategory === 0 || cid === currentCategory);
+        const searchMatch = (currentSearchQuery === '' || name.includes(currentSearchQuery) || desc.includes(currentSearchQuery));
+        if (catMatch && searchMatch) { card.style.display = 'block'; visible++; setTimeout(() => card.style.opacity = '1', 10); }
+        else { card.style.display = 'none'; card.style.opacity = '0'; }
     });
-    updateEmptyState(visibleCount);
+    updateEmptyState(visible);
 }
 
-function updateEmptyState(visibleCount) {
-    let emptyState = document.querySelector('.empty-state');
-    if (visibleCount === 0) {
-        if (!emptyState) {
-            const productsGrid = document.getElementById('productsGrid');
-            emptyState = document.createElement('div');
-            emptyState.className = 'empty-state';
-            emptyState.textContent = '📭 Нет результатов по вашему запросу';
-            productsGrid.appendChild(emptyState);
+function updateEmptyState(visible) {
+    let es = document.querySelector('.empty-state');
+    if (visible === 0) {
+        if (!es) {
+            const grid = document.getElementById('productsGrid');
+            es = document.createElement('div'); es.className = 'empty-state'; es.textContent = '📭 Нет результатов по вашему запросу';
+            grid.appendChild(es);
         }
-        emptyState.style.display = 'block';
-    } else if (emptyState) {
-        emptyState.style.display = 'none';
+        es.style.display = 'block';
+    } else if (es) es.style.display = 'none';
+}
+
+function initEventListeners() {
+    // Делегирование кликов по карточкам (надежнее при динамическом изменении списка)
+    const grid = document.getElementById('productsGrid');
+    if (grid) {
+        grid.addEventListener('click', function (e) {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const id = card.dataset.productId;
+            if (id) openProductModal(id);
+        });
     }
-}
 
-// МОДАЛЬНОЕ ОКНО
-function openProductModal(productId) {
-    const modal = document.getElementById('productModal');
-    if (!modal) { console.error('Modal element not found'); return; }
-    const apiUrl = document.querySelector('[data-product-api]')?.dataset.productApi || `/partners/api/product/${productId}/`;
-    fetch(apiUrl)
-        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-        .then(data => { if (data.success) { populateModalContent(data); openModal(modal); } })
-        .catch(err => { console.error(err); showNotification('Ошибка подключения к серверу', 'error'); });
-}
-
-function populateModalContent(data) {
-    document.getElementById('modalName').textContent = data.name;
-    document.getElementById('modalDescription').textContent = data.description;
-    document.getElementById('modalOffers').textContent = `📦 ${data.count_offers} предложений`;
-    const link = document.getElementById('modalLink'); link.href = data.marketplace_url;
-    const modalImage = document.getElementById('modalImage');
-    if (data.image_url) { modalImage.innerHTML = `<img src="${data.image_url}" alt="${data.name}" loading="lazy">`; modalImage.classList.remove('placeholder'); }
-    else { modalImage.innerHTML = '🏷️'; modalImage.classList.add('placeholder'); }
-}
-
-function openModal(modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-function closeProductModal() { const modal = document.getElementById('productModal'); modal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
-
-// ОБРАБОТКА СОБЫТИЙ
-function initializeEventListeners() {
+    // Модальное окно
     const modal = document.getElementById('productModal');
     const overlay = modal?.querySelector('.modal-overlay'); if (overlay) overlay.addEventListener('click', closeProductModal);
     const closeBtn = modal?.querySelector('.modal-close'); if (closeBtn) closeBtn.addEventListener('click', closeProductModal);
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeProductModal(); });
-    const searchInput = document.getElementById('searchInput'); if (searchInput) searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') e.preventDefault(); });
-    const productCards = document.querySelectorAll('.product-card'); productCards.forEach(card => card.addEventListener('click', function () { const productId = this.dataset.productId; if (productId) openProductModal(productId); }));
+}
+
+function openProductModal(productId) {
+    const modal = document.getElementById('productModal');
+    if (!modal) { console.error('Modal not found'); return; }
+    // Попытаться прочитать базовый путь API из data-атрибута, иначе использовать fallback
+    const apiBase = document.querySelector('[data-product-api]')?.dataset.productApi || '/partners/api/product/';
+    const apiUrl = apiBase.endsWith('/') ? `${apiBase}${productId}/` : `${apiBase}/${productId}/`;
+    fetch(apiUrl)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(data => { if (data.success) { populateModalContent(data); modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } else { showNotification('Ошибка при загрузке товара', 'error'); } })
+        .catch(err => { console.error(err); showNotification('Ошибка сети', 'error'); });
+}
+
+function populateModalContent(data) {
+    document.getElementById('modalName').textContent = data.name || '';
+    document.getElementById('modalDescription').textContent = data.description || '';
+    document.getElementById('modalOffers').textContent = `📦 ${data.count_offers || 0} предложений`;
+    const link = document.getElementById('modalLink'); if (link) link.href = data.marketplace_url || '#';
+    const mi = document.getElementById('modalImage');
+    if (mi) {
+        if (data.image_url) { mi.innerHTML = `<img src="${data.image_url}" alt="${data.name || ''}" loading="lazy">`; mi.classList.remove('placeholder'); }
+        else { mi.innerHTML = '🏷️'; mi.classList.add('placeholder'); }
+    }
+}
+
+function closeProductModal() { const modal = document.getElementById('productModal'); if (modal) { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; } }
+
+function showNotification(message, type = 'info') { console.log(`[${type}] ${message}`); }
+
+function initLazyImages() {
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { const img = entry.target; if (img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src'); obs.unobserve(img); } } });
+    });
+    document.querySelectorAll('img[data-src]').forEach(img => io.observe(img));
+}
+
+function debounce(fn, t) { let timeout; return function (...a) { clearTimeout(timeout); timeout = setTimeout(() => fn.apply(this, a), t); }; }
+
+/* экспорт для тестов/модулей (если нужно) */
+if (typeof module !== 'undefined' && module.exports) module.exports = { openProductModal, closeProductModal, filterProducts };
+const searchInput = document.getElementById('searchInput'); if (searchInput) searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') e.preventDefault(); });
+const productCards = document.querySelectorAll('.product-card'); productCards.forEach(card => card.addEventListener('click', function () { const productId = this.dataset.productId; if (productId) openProductModal(productId); }));
 }
 
 // УТИЛИТЫ
