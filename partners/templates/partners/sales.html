@@ -135,7 +135,8 @@
     </div>
 
     <!-- Скрипты -->
-    <script src="{% static 'partners/js/partners.js' %}"></script>
+    <script>console.log('inline: sales template loaded');</script>
+    <script src="{% static 'partners/js/partners.js' %}?v=2"></script>
 
     <script>
         // Инициализация при загрузке
