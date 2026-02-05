@@ -1,0 +1,38 @@
+<article class="offer-card">
+  {% if offer.is_hot %}
+    <div class="offer-badge">Хит</div>
+  {% endif %}
+
+  {% if offer.image_url %}
+    <div class="offer-image">
+      <img src="{{ offer.image_url }}" alt="{{ offer.title }}">
+    </div>
+  {% endif %}
+
+  <h3 class="offer-title">{{ offer.title }}</h3>
+
+  <p class="offer-short">
+    {{ offer.short_description }}
+  </p>
+
+  <ul class="offer-meta">
+    <li><span>Тип клиента:</span> {{ offer.get_client_type_display }}</li>
+    {% if offer.city %}
+      <li><span>Город:</span> {{ offer.city }}</li>
+    {% endif %}
+    <li>
+      <span>Выплата партнёру:</span>
+      {% if offer.payout_type == 'fixed' %}
+        {{ offer.payout_value }} ₽
+      {% else %}
+        {{ offer.payout_value }} %
+      {% endif %}
+    </li>
+  </ul>
+
+  {% if offer.landing_url %}
+    <a class="offer-button" href="{{ offer.landing_url }}" target="_blank">
+      Подробнее
+    </a>
+  {% endif %}
+</article>

@@ -25,7 +25,7 @@ def get_product_details(request, product_id):
             'description': product.description,
             'count_offers': product.count_offers,
             'marketplace_url': product.marketplace_url,
-            'image_url': product.image_url or '',
+            'image_url': product.image_url or'',
         }
     except Product.DoesNotExist:
         data = {

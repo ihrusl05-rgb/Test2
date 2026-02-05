@@ -16,7 +16,6 @@
                 <h1>Уфанефть</h1>
             </div>
             <div class="navbar-menu">
-                <a href="{% url 'partners:sales' %}" class="nav-link active">Скидки</a>
                 <button class="btn-logout" onclick="logout()">Выход</button>
             </div>
         </div>
@@ -53,7 +52,7 @@
                         </div>
                         <div class="category-info">
                             <h3>{{ category.name }}</h3>
-                            <p>{{ category.products.count }} предложений</p>
+                            <p>{{ category.products.count }} </p>
                         </div>
                     </div>
                     {% endfor %}
@@ -62,42 +61,47 @@
 
             <!-- Товары/Предложения -->
             <section class="products-section">
-                <h2 class="section-title">Скидки от партнеров</h2>
-                <div class="products-grid" id="productsGrid">
-                    {% for product in products %}
-                    <div
-                        class="product-card"
-                        data-category-id="{{ product.category.id }}"
-                        onclick="openProductModal({{ product.id }})"
-                    >
-                        {% if product.image_url %}
-                        <div class="product-image">
-                            <img src="{{ product.image_url }}" alt="{{ product.name }}">
-                        </div>
-                        {% else %}
-                        <div class="product-image placeholder">
-                            🏷️
-                        </div>
-                        {% endif %}
+  <h2 class="section-title">Предложения от партнеров</h2>
+  <div class="products-grid" id="productsGrid">
+    {% for product in products %}
+            <div
+                class="product-card"
+                data-category-id="{{ product.category.id }}"
+                data-product-id="{{ product.id }}"
+                style="cursor: pointer;"
+            >
+        {% if product.image %}
+          <div class="product-image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          </div>
+        {% elif product.image_url %}
+          <div class="product-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+          </div>
+        {% else %}
+          <div class="product-image placeholder">
+            🏷️
+          </div>
+        {% endif %}
 
-                        <div class="product-body">
-                            <h3 class="product-name">{{ product.name }}</h3>
-                            <p class="product-description">{{ product.short_description }}</p>
-                            <div class="product-meta">
-                                <span class="offer-count">
-                                    📦 {{ product.count_offers }} предложений
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="empty-state">
-                        <p>📭 Нет доступных товаров</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
+        <div class="product-body">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-description">{{ product.short_description }}</p>
+          <div class="product-meta">
+            <span class="offer-count">
+              📦 {{ product.count_offers }} предложений
+            </span>
+          </div>
         </div>
+      </div>
+    {% empty %}
+      <div class="empty-state">
+        <p>📭 Нет доступных товаров</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
     </main>
 
     <!-- Модальное окно для деталей товара -->

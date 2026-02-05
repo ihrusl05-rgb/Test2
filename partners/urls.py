@@ -9,3 +9,4 @@ urlpatterns = [
     path('api/product/<int:product_id>/', views.get_product_details, name='product_api'),
     path('about/', views.about, name='about'),
 ]
+
