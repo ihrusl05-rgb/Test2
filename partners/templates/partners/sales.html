@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Товары - Партнеры и товары</title>
+    <title>Скидки</title>
     <link rel="stylesheet" href="{% static 'partners/css/partners.css' %}">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <span class="logo-icon">🏢</span>
+                <span class="logo-icon">💸</span>
                 <h1>Уфанефть</h1>
             </div>
             <div class="navbar-menu">
@@ -88,8 +88,6 @@
           <h3 class="product-name">{{ product.name }}</h3>
           <p class="product-description">{{ product.short_description }}</p>
           <div class="product-meta">
-            <span class="offer-count">
-              📦 {{ product.count_offers }} предложений
             </span>
           </div>
         </div>
@@ -127,7 +125,14 @@
                         target="_blank"
                         class="btn-marketplace"
                     >
-                        Перейти на маркетплейс →
+                    <svg
+                        class="btn-icon"
+                        viewBox="5 20 36 5"
+                        aria-hidden="true"
+
+                    >
+                    <span class="arrow">→</span>
+                        Получить скидку →
                     </a>
                 </div>
             </div>

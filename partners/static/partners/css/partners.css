@@ -469,6 +469,28 @@ pre code {
   cursor: not-allowed;
 }
 
+.btn-marketplace {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+}
+
+.btn-marketplace .btn-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.btn-marketplace .arrow {
+    transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.btn-marketplace:hover .arrow {
+    transform: translateX(3px);
+}
+
 /* Form elements */
 .form-control {
   display: block;
