@@ -52,7 +52,6 @@
                         </div>
                         <div class="category-info">
                             <h3>{{ category.name }}</h3>
-                            <p>{{ category.products.count }} </p>
                         </div>
                     </div>
                     {% endfor %}
@@ -80,13 +79,15 @@
           </div>
         {% else %}
           <div class="product-image placeholder">
-            🏷️
+            <img src="{% static 'partners/orig.webp' %}" alt="{{ product.name }}">
           </div>
         {% endif %}
 
         <div class="product-body">
-          <h3 class="product-name">{{ product.name }}</h3>
-          <p class="product-description">{{ product.short_description }}</p>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.category.name }}</p>
+          <p>Цена - всего {{ product.price }} руб.</p>
+          <p class="product-id">{{ product.display_id }}</p>
           <div class="product-meta">
             </span>
           </div>

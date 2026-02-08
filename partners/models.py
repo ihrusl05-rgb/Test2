@@ -42,5 +42,6 @@ class Product(models.Model):
         verbose_name ='Товар'
         verbose_name_plural = "Товары"
 
-    def __str__(self):
-        return f"{self.name} ({self.category.name} Количество - {self.quantity})"# Create your models here.
+
+    def display_id(self):
+        return f"{self.id:03}"  # Форматирование ID с ведущими нулями, например 001, 002, ... 010, 011 и т.д.

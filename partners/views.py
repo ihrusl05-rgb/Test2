@@ -1,3 +1,4 @@
+from os import name
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -7,6 +8,7 @@ def sales_page(request):
     """Страница товаров и категорий"""
     categories = Category.objects.all()
     products = Product.objects.filter(is_active=True)
+
 
     context = {
         'categories': categories,
