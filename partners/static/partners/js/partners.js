@@ -77,8 +77,8 @@ function initEventListeners() {
 function openProductModal(productId) {
     const modal = document.getElementById('productModal');
     if (!modal) { console.error('Modal not found'); return; }
-    const apiBase = document.querySelector('[data-product-api]')?.dataset.productApi || '/partners/api/product/';
-    const apiUrl = apiBase.endsWith('/') ? `${apiBase}${productId}/` : `${apiBase}/${productId}/`;
+    const tpl = grid?.dataset.productApiTemplate; // "/partners/sales/product/0/";
+    const apiUrl = tpl ? tpl.replace(/0\/$/, `${productId}/`) : `/partners/sales/product/${productId}/`;
     fetch(apiUrl)
         .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
         .then(data => { if (data.success) { populateModalContent(data); modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } else { console.error('Ошибка при загрузке товара'); } })

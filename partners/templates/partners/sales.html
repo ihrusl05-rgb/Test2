@@ -60,13 +60,18 @@
 
             <!-- Товары/Предложения -->
             <section class="products-section">
-  <h2 class="section-title">Предложения от партнеров</h2>
-  <div class="products-grid" id="productsGrid">
+             <h2 class="section-title">Предложения от партнеров</h2>
+                <div class="products-grid"
+                 id="productsGrid"
+                data-product-api-template="{% url 'partners:product_api' 0 %}">
+
+
     {% for product in products %}
             <div
                 class="product-card"
                 data-category-id="{{ product.category.id }}"
                 data-product-id="{{ product.id }}"
+                onclick="openProductModal({{ product.id }})"
                 style="cursor: pointer;"
             >
         {% if product.image %}
@@ -84,12 +89,11 @@
         {% endif %}
 
         <div class="product-body">
-          <h3>{{ product.name }}</h3>
-          <p>{{ product.category.name }}</p>
+          <h3 class="product-name"> {{ product.name }}</h3>
+          <p class="product-description"> {{ product.category.name }}</p>
           <p>Цена - всего {{ product.price }} руб.</p>
-          <p class="product-id">{{ product.display_id }}</p>
+          <p class= mt-3 "product-id">{{ product.display_id }}</p>
           <div class="product-meta">
-            </span>
           </div>
         </div>
       </div>
@@ -125,12 +129,6 @@
                         href="#"
                         target="_blank"
                         class="btn-marketplace"
-                    >
-                    <svg
-                        class="btn-icon"
-                        viewBox="5 20 36 5"
-                        aria-hidden="true"
-
                     >
                     <span class="arrow">→</span>
                         Получить скидку →
@@ -192,12 +190,13 @@
             element.classList.add('active');
 
             // Фильтруем товары
+            const isAll = categoryId === 0 || categoryId === '0';
+
             cards.forEach(card => {
-                if (categoryId === 0 || card.dataset.categoryId == categoryId) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                const cardCategoryId = card.dataset.categoryId;
+                const shouldShow = isAll || cardCategoryId == categoryId;
+                card.style.display = shouldShow ? 'block' : 'none';
+
             });
         }
 
@@ -207,7 +206,13 @@
             const cards = document.querySelectorAll('.product-card');
 
             searchInput.addEventListener('input', function(e) {
-                const query = e.target.value.toLowerCase();
+                const query = e.target.value.toLowerCase().trim();
+
+                if (!query) {
+            // Показать все если пусто
+                     cards.forEach(card => card.style.display = 'block');
+                     return;
+                }
 
                 cards.forEach(card => {
                     const name = card.querySelector('.product-name').textContent.toLowerCase();

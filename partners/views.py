@@ -1,4 +1,4 @@
-from os import name
+#from os import name
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -9,7 +9,6 @@ def sales_page(request):
     categories = Category.objects.all()
     products = Product.objects.filter(is_active=True)
 
-
     context = {
         'categories': categories,
         'products': products,
@@ -17,17 +16,17 @@ def sales_page(request):
     return render(request, 'partners/sales.html', context)
 
 @require_http_methods(["GET"])
-def get_product_details(request, product_id):
+def get_product_details(request, product_id, product_slug):
     """API для получения деталей товара (для модального окна)"""
     try:
-        product = Product.objects.get(id=product_id, is_active=True)
+        product = Product.objects.get(id=product_id, is_active=True,)
         data = {
             'success': True,
             'name': product.name,
             'description': product.description,
             'count_offers': product.count_offers,
             'marketplace_url': product.marketplace_url,
-            'image_url': product.image_url or'',
+            'image_url': product.image.url if product.image else (product.image_url or ""),
         }
     except Product.DoesNotExist:
         data = {

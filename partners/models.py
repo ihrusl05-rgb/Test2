@@ -19,6 +19,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def Category_id(self):
+        return f"{self.id:03}"
+
 
 class Product(models.Model):
     """Товар/Услуга партнера"""
@@ -43,5 +46,6 @@ class Product(models.Model):
         verbose_name_plural = "Товары"
 
 
+# Форматирование ID с ведущими нулями, например 001, 002, ... 010, 011 и т.д.
     def display_id(self):
-        return f"{self.id:03}"  # Форматирование ID с ведущими нулями, например 001, 002, ... 010, 011 и т.д.
+        return f"{self.id:03}"
