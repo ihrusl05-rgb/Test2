@@ -583,15 +583,15 @@
                     </a>
                     {% for category in categories %}
                         <a class="category-card{% if selected_category_slug and category.slug == selected_category_slug %} active{% endif %}"
-                           href="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales' %}{% endif %}"
+                           href="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}"
                            data-category-id="{{ category.id }}"
                            data-category-slug="{{ category.slug|default:'' }}"
-                           data-category-url="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales' %}{% endif %}">
+                           data-category-url="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}"
                             <span class="category-icon"
                                   style="background: {{ category.color|default:'#1B66D7' }};">
                                 {{ category.icon }}
                             </span>
-                            <span class="category-name">{{ category.name }}</span>
+                            <span class="category-name">{{ category.name }}</span>>
                         </a>
                     {% empty %}
                         <p>Категории пока не добавлены.</p>

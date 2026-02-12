@@ -1,19 +1,26 @@
 #from os import name
+from django.core import paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Category, Product
 
-def sales_page(request, category_slug=None):
+def sales_page(request, category_slug=None, category_id=None):
     """Страница товаров и категорий"""
     categories = Category.objects.all()
-    products = Product.objects.filter(is_active=True).select_related('category')
+    products = Product.objects.filter(is_active=True).select_related('category')  #Оптимизация запросов к базе данных, чтобы избежать N+1 проблемы при отображении товаров и их категорий"""
     selected_category_slug = None
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
         selected_category_slug = category.slug
+
+    elif category_id:
+        category = get_object_or_404(Category, id=category_id)
+        products = products.filter(category=category)
+
+    #paginator= Paginator(products, 4) # Показывать по 4 товаров на странице
 
     context = {
         'categories': categories,
