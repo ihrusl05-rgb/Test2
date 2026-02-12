@@ -4,15 +4,6 @@
 
 {% block extra_css %}
 <style>
-    body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
     .login-container {
         width: 100%;
         max-width: 450px;
@@ -20,19 +11,11 @@
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         overflow: hidden;
-        animation: slideUp 0.5s ease-out;
+        animation: none;
     }
 
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+    @keyframes slideUp { }
+    .login-container { animation: none !important; }
 
     .login-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -203,13 +186,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="login-container">
-    <!-- Заголовок с логотипом -->
-    <div class="login-header">
-        <div class="logo">🏢</div>
-        <h1>{{content}}</h1>
-        <p>Экосистема для партнеров и клиентов</p>
-    </div>
+<div style="
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+">
+    <div class="login-container">
+        <!-- Заголовок с логотипом -->
+        <div class="login-header">
+            <div class="logo">🏢</div>
+            <h1>{{content}}</h1>
+            <p>Экосистема для партнеров и клиентов</p>
+        </div>
 
     <!-- Форма входа -->
     <form id="loginForm" class="login-body" method="POST">
@@ -247,19 +237,6 @@
             <a href="#privacy">политикой конфиденциальности</a>
         </p>
     </div>
-
-    <div style="margin-top: 40px; text-align: center;">
-    <a href="{% url 'partners:about' %}"
-       style="display: inline-block;
-              padding: 10px 20px;
-              border-radius: 4px;
-              background: #ffffff;
-              color: #4b55e3;
-              font-weight: 600;
-              text-decoration: none;">
-        О компании
-    </a>
-</div>
 
 
 </div>

@@ -1,22 +1,29 @@
 #from os import name
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Category, Product
 
-def sales_page(request):
+def sales_page(request, category_slug=None):
     """Страница товаров и категорий"""
     categories = Category.objects.all()
-    products = Product.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True).select_related('category')
+    selected_category_slug = None
+
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
+        selected_category_slug = category.slug
 
     context = {
         'categories': categories,
         'products': products,
+        'selected_category_slug': selected_category_slug,
     }
     return render(request, 'partners/sales.html', context)
 
 @require_http_methods(["GET"])
-def get_product_details(request, product_id, product_slug):
+def get_product_details(request, product_id):
     """API для получения деталей товара (для модального окна)"""
     try:
         product = Product.objects.get(id=product_id, is_active=True,)

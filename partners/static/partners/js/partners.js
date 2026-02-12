@@ -1,104 +1,220 @@
-// partners-clean.js — чистая, минимальная версия
 let currentCategory = 0;
-let currentSearchQuery = '';
+let currentSearchQuery = "";
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.debug('partners.js init');
+document.addEventListener("DOMContentLoaded", () => {
+    initCategoryState();
     initSearch();
-    initCategories();
-    initEventListeners();
-    initLazyImages();
+    initCategoryLinks();
+    initProductClicks();
+    initModalControls();
+    filterProducts();
 });
 
-function initSearch() {
-    const input = document.getElementById('searchInput');
-    if (!input) return;
-    input.addEventListener('input', debounce(e => { currentSearchQuery = e.target.value.toLowerCase().trim(); filterProducts(); }, 200));
-    input.addEventListener('keydown', e => { if (e.key === 'Escape') { input.value = ''; currentSearchQuery = ''; filterProducts(); } });
+function initCategoryState() {
+    const active = document.querySelector(".category-card.active");
+    currentCategory = active ? parseInt(active.dataset.categoryId || "0", 10) : 0;
 }
 
-function initCategories() {
-    document.querySelectorAll('.category-card').forEach(card => {
-        card.addEventListener('click', function () {
-            const id = parseInt(this.dataset.categoryId) || 0;
-            currentCategory = id;
-            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-            this.classList.add('active');
+function initSearch() {
+    const input = document.getElementById("searchInput");
+    if (!input) return;
+
+    input.addEventListener(
+        "input",
+        debounce((e) => {
+            currentSearchQuery = (e.target.value || "").toLowerCase().trim();
             filterProducts();
+        }, 180),
+    );
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        input.value = "";
+        currentSearchQuery = "";
+        filterProducts();
+    });
+}
+
+function initCategoryLinks() {
+    document.querySelectorAll(".category-card").forEach((card) => {
+        card.addEventListener("click", (e) => {
+            const targetUrl = card.dataset.categoryUrl || "";
+            if (targetUrl && !isModifiedClick(e)) {
+                e.preventDefault();
+                window.location.assign(targetUrl);
+            }
         });
     });
-    const first = document.querySelector('.category-card'); if (first) first.classList.add('active');
+}
+
+function isModifiedClick(e) {
+    return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
 }
 
 function filterProducts() {
-    const cards = document.querySelectorAll('.product-card');
-    let visible = 0;
-    cards.forEach(card => {
-        const cid = parseInt(card.dataset.categoryId) || 0;
-        const name = (card.querySelector('.product-name')?.textContent || '').toLowerCase();
-        const desc = (card.querySelector('.product-description')?.textContent || '').toLowerCase();
-        const catMatch = (currentCategory === 0 || cid === currentCategory);
-        const searchMatch = (currentSearchQuery === '' || name.includes(currentSearchQuery) || desc.includes(currentSearchQuery));
-        if (catMatch && searchMatch) { card.style.display = 'block'; visible++; setTimeout(() => card.style.opacity = '1', 10); }
-        else { card.style.display = 'none'; card.style.opacity = '0'; }
+    const cards = document.querySelectorAll(".product-card");
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+        const categoryId = parseInt(card.dataset.categoryId || "0", 10);
+        const name = (card.querySelector(".product-name")?.textContent || "").toLowerCase();
+        const desc = (card.querySelector(".product-description")?.textContent || "").toLowerCase();
+
+        const categoryMatch = currentCategory === 0 || categoryId === currentCategory;
+        const searchMatch =
+            currentSearchQuery.length === 0 ||
+            name.includes(currentSearchQuery) ||
+            desc.includes(currentSearchQuery);
+
+        const show = categoryMatch && searchMatch;
+        card.style.display = show ? "block" : "none";
+        if (show) visibleCount += 1;
     });
-    updateEmptyState(visible);
+
+    updateResultsCounter(visibleCount);
+    updateEmptyState(visibleCount);
 }
 
-function updateEmptyState(visible) {
-    let es = document.querySelector('.empty-state');
-    if (visible === 0) {
-        if (!es) {
-            const grid = document.getElementById('productsGrid');
-            es = document.createElement('div'); es.className = 'empty-state'; es.textContent = '📭 Нет результатов по вашему запросу';
-            grid.appendChild(es);
+function updateResultsCounter(count) {
+    const counter = document.getElementById("resultsCounter");
+    if (!counter) return;
+    counter.textContent = `Найдено ${count} предложений`;
+}
+
+function updateEmptyState(visibleCount) {
+    const grid = document.getElementById("productsGrid");
+    if (!grid) return;
+
+    let empty = grid.querySelector(".empty-state-modern.js-empty-state");
+    if (visibleCount === 0) {
+        if (!empty) {
+            empty = document.createElement("div");
+            empty.className = "empty-state-modern js-empty-state";
+            empty.innerHTML = "<h3>Ничего не найдено</h3><p>Попробуйте изменить запрос.</p>";
+            grid.appendChild(empty);
         }
-        es.style.display = 'block';
-    } else if (es) es.style.display = 'none';
-}
-
-function initEventListeners() {
-    const grid = document.getElementById('productsGrid');
-    if (grid) {
-        grid.addEventListener('click', function (e) {
-            const card = e.target.closest('.product-card');
-            if (!card) return;
-            const id = card.dataset.productId;
-            console.debug('product card click', id);
-            if (id) openProductModal(id);
-        });
+        empty.style.display = "block";
+    } else if (empty) {
+        empty.style.display = "none";
     }
-    const modal = document.getElementById('productModal');
-    const overlay = modal?.querySelector('.modal-overlay'); if (overlay) overlay.addEventListener('click', closeProductModal);
-    const closeBtn = modal?.querySelector('.modal-close'); if (closeBtn) closeBtn.addEventListener('click', closeProductModal);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeProductModal(); });
 }
 
-function openProductModal(productId) {
-    const modal = document.getElementById('productModal');
-    if (!modal) { console.error('Modal not found'); return; }
-    const tpl = grid?.dataset.productApiTemplate; // "/partners/sales/product/0/";
-    const apiUrl = tpl ? tpl.replace(/0\/$/, `${productId}/`) : `/partners/sales/product/${productId}/`;
+function initProductClicks() {
+    const grid = document.getElementById("productsGrid");
+    if (!grid) return;
+
+    grid.addEventListener("click", (e) => {
+        const card = e.target.closest(".product-card");
+        if (!card) return;
+        const productId = card.dataset.productId;
+        if (!productId) return;
+        openProductModal(productId, card);
+    });
+}
+
+function initModalControls() {
+    const modal = document.getElementById("productModal");
+    if (!modal) return;
+
+    modal.querySelector(".modal-overlay")?.addEventListener("click", closeProductModal);
+    modal.querySelector(".modal-close")?.addEventListener("click", closeProductModal);
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+            closeProductModal();
+        }
+    });
+}
+
+function openProductModal(productId, cardEl) {
+    const modal = document.getElementById("productModal");
+    if (!modal) return;
+
+    const grid = document.getElementById("productsGrid");
+    const templateUrl = grid?.dataset.productApiTemplate || "/partners/api/product/0/";
+    const apiUrl = templateUrl.replace(/0\/$/, `${productId}/`);
+
     fetch(apiUrl)
-        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-        .then(data => { if (data.success) { populateModalContent(data); modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } else { console.error('Ошибка при загрузке товара'); } })
-        .catch(err => { console.error(err); });
+        .then((resp) => {
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            return resp.json();
+        })
+        .then((data) => {
+            if (!data.success) throw new Error("api_failed");
+            const merged = {
+                ...fallbackFromCard(cardEl),
+                ...data,
+            };
+            populateModalContent(merged);
+            showProductModal();
+        })
+        .catch(() => {
+            populateModalContent(fallbackFromCard(cardEl));
+            showProductModal();
+        });
+}
+
+function fallbackFromCard(cardEl) {
+    return {
+        name: cardEl?.querySelector(".product-name")?.textContent?.trim() || "Предложение",
+        description: cardEl?.querySelector(".product-description")?.textContent?.trim() || "",
+        count_offers: 1,
+        marketplace_url: "#",
+        image_url: cardEl?.querySelector(".product-image-wrap img")?.src || "",
+        category_name: cardEl?.querySelector(".product-badge")?.textContent?.trim() || "Специальное предложение",
+    };
 }
 
 function populateModalContent(data) {
-    document.getElementById('modalName').textContent = data.name || '';
-    document.getElementById('modalDescription').textContent = data.description || '';
-    document.getElementById('modalOffers').textContent = `📦 ${data.count_offers || 0} предложений`;
-    const link = document.getElementById('modalLink'); if (link) link.href = data.marketplace_url || '#';
-    const mi = document.getElementById('modalImage');
-    if (mi) {
-        if (data.image_url) { mi.innerHTML = `<img src="${data.image_url}" alt="${data.name || ''}" loading="lazy">`; mi.classList.remove('placeholder'); }
-        else { mi.innerHTML = '🏷️'; mi.classList.add('placeholder'); }
+    const name = document.getElementById("modalName");
+    const description = document.getElementById("modalDescription");
+    const offers = document.getElementById("modalOffers");
+    const category = document.getElementById("modalCategory");
+    const link = document.getElementById("modalLink");
+    const image = document.getElementById("modalImage");
+
+    if (name) name.textContent = data.name || "";
+    if (description) description.textContent = data.description || "";
+    if (offers) offers.textContent = data.count_offers || 0;
+    if (category) category.textContent = data.category_name || "Специальное предложение";
+    if (link) link.href = data.marketplace_url || "#";
+
+    if (image) {
+        if (data.image_url) {
+            image.innerHTML = `<img src="${data.image_url}" alt="${escapeHtml(data.name || "")}" loading="lazy">`;
+        } else {
+            image.textContent = "🛍";
+        }
     }
 }
 
-function closeProductModal() { const modal = document.getElementById('productModal'); if (modal) { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; } }
+function showProductModal() {
+    const modal = document.getElementById("productModal");
+    if (!modal) return;
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
 
-function initLazyImages() { if (!('IntersectionObserver' in window)) return; const io = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting) { const img = entry.target; if (img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src'); obs.unobserve(img); } } }); }); document.querySelectorAll('img[data-src]').forEach(img => io.observe(img)); }
+function closeProductModal() {
+    const modal = document.getElementById("productModal");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    document.body.style.overflow = "auto";
+}
 
-function debounce(fn, t) { let timeout; return function (...a) { clearTimeout(timeout); timeout = setTimeout(() => fn.apply(this, a), t); }; }
+function escapeHtml(str) {
+    return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
+
+function debounce(fn, ms) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), ms);
+    };
+}
