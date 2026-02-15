@@ -114,11 +114,11 @@
     }
 
     .product-card {
-        background: #ffffff;
+        background: #f4f0f0d0;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 14px 32px rgba(9, 19, 34, 0.18);
-        border: 1px solid #d6dfec;
+        box-shadow: 0 14px 32px rgba(212, 208, 186, 0.51);
+        border: 1px solid #1e2328;
         cursor: pointer;
         transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
@@ -178,7 +178,7 @@
         margin: 0 0 12px;
         font-size: 14px;
         line-height: 1.45;
-        color: #47617d;
+        color: #10151b;
         min-height: 40px;
     }
 
@@ -293,7 +293,7 @@
         color: #d9e3f3;
     }
 
-    
+
     .pagination {
         margin-top: 18px;
         display: flex;
@@ -535,14 +535,14 @@
             <h1 class="sales-title">Скидки от партнеров</h1>
             <p class="sales-subtitle">Выберите категорию и откройте карточку предложения.</p>
             {% if selected_category_slug %}
-                <div class="active-filter-badge">
-                    Категория:
-                    {% for category in categories %}
-                        {% if category.slug == selected_category_slug %}
-                            <strong>{{ category.name }}</strong>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+            <div class="active-filter-badge">
+                Категория:
+                {% for category in categories %}
+                {% if category.slug == selected_category_slug %}
+                <strong>{{ category.name }}</strong>
+                {% endif %}
+                {% endfor %}
+            </div>
             {% endif %}
         </div>
         <div id="resultsCounter" class="results-counter">
@@ -551,74 +551,73 @@
     </header>
 
     <div class="search-row">
-        <input id="searchInput"
-               type="search"
-               class="search-input"
-               placeholder="Поиск по товарам и описанию">
+        <input id="searchInput" type="search" class="search-input" placeholder="Поиск по товарам и описанию">
     </div>
 
+    <!-- Форма фильтров -->
+    <!-- Форма фильтров -->
     <div class="sales-layout">
+
         <section class="products-column">
-            <div id="productsGrid"
-                 class="products-grid"
-                 data-product-api-template="{% url 'partners:product_api' 0 %}">
+            <div id="productsGrid" class="products-grid" data-product-api-template="{% url 'partners:product_api' 0 %}">
                 {% for product in products %}
-                    <article class="product-card"
-                             data-product-id="{{ product.id }}"
-                             data-category-id="{{ product.category_id }}">
-                        <div class="product-image-wrap">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                            {% elif product.image_url %}
-                                <img src="{{ product.image_url }}" alt="{{ product.name }}">
-                            {% else %}
-                                <div class="product-image-fallback">🛍</div>
-                            {% endif %}
-                            <div class="product-badge"
-                                 style="background: {{ product.category.color|default:'#1B66D7' }};">
-                                {{ product.category.name }}
-                            </div>
+                <article class="product-card" data-product-id="{{ product.id }}" data-category-id="{{ product.category_id }}">
+                    <div class="product-image-wrap">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% elif product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="product-image-fallback">🛍</div>
+                        {% endif %}
+                        <div class="product-badge" style="background: {{ product.category.color|default:'#1B66D7' }};">
+                            {{ product.category.name }}
                         </div>
-                        <div class="product-info">
-                            <h3 class="product-name">{{ product.name }}</h3>
-                            <p class="product-description">
-                                {% if product.description %}
-                                    {{ product.description|truncatechars:120 }}
-                                {% else %}
-                                    Описание появится позже.
-                                {% endif %}
-                            </p>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    {% if product.price %}от {{ product.price }} ₽{% else %}Цена по запросу{% endif %}
-                                </div>
-                                <div class="product-id">#{{ product.display_id }}</div>
-                            </div>
-                        </div>
-                    </article>
-                {% empty %}
-                    <div class="empty-state-modern">
-                        <h3>Пока нет активных предложений</h3>
-                        <p>Загляните позже, скоро здесь появятся новые скидки.</p>
                     </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-description">
+                            {% if product.description %}
+                            {{ product.description|truncatechars:75}}
+                            {% else %}
+                            Описание появится позже.
+                            {% endif %}
+                        </p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                {% if product.price %}от {{ product.price }} ₽{% else %}Цена по запросу{% endif %}
+                            </div>
+                            <div class="product-id">#{{ product.display_id }}</div>
+                        </div>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="empty-state-modern">
+                    <h3>Пока нет активных предложений</h3>
+                    <p>Загляните позже, скоро здесь появятся новые скидки.</p>
+                </div>
                 {% endfor %}
             </div>
+
+            {# Пагинация - ИСПРАВЛЕНО с сохранением параметров #}
             {% if products.paginator.num_pages > 1 %}
-                <nav class="pagination" aria-label="Пагинация">
-                    {% if products.has_previous %}
-                        <a class="pagination-link" href="?page={{ products.previous_page_number }}">Назад</a>
+            <nav class="pagination" aria-label="Пагинация">
+                {% if products.has_previous %}
+                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ products.previous_page_number }}">Назад</a>
+                {% endif %}
+
+                {% for num in products.paginator.page_range %}
+                    {% if num == products.number %}
+                    <span class="pagination-link is-active">{{ num }}</span>
+                    {% else %}
+                    <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ num }}">{{ num }}</a>
                     {% endif %}
-                    {% for num in products.paginator.page_range %}
-                        {% if num == products.number %}
-                            <span class="pagination-link is-active">{{ num }}</span>
-                        {% else %}
-                            <a class="pagination-link" href="?page={{ num }}">{{ num }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if products.has_next %}
-                        <a class="pagination-link" href="?page={{ products.next_page_number }}">Вперед</a>
-                    {% endif %}
-                </nav>
+                {% endfor %}
+
+                {% if products.has_next %}
+                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ products.next_page_number }}">Вперед</a>
+                {% endif %}
+            </nav>
             {% endif %}
         </section>
 
@@ -634,20 +633,20 @@
                         <span class="category-icon-all">⭐</span>
                         <span class="category-name">Все предложения</span>
                     </a>
+
                     {% for category in categories %}
-                        <a class="category-card{% if selected_category_slug and category.slug == selected_category_slug %} active{% endif %}"
-                           href="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}"
-                           data-category-id="{{ category.id }}"
-                           data-category-slug="{{ category.slug|default:'' }}"
-                           data-category-url="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}"
-                            <span class="category-icon"
-                                  style="background: {{ category.color|default:'#1B66D7' }};">
-                                {{ category.icon }}
-                            </span>
-                            <span class="category-name">{{ category.name }}</span>>
-                        </a>
+                    <a class="category-card{% if selected_category_slug and category.slug == selected_category_slug %} active{% endif %}"
+                       href="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}"
+                       data-category-id="{{ category.id }}"
+                       data-category-slug="{{ category.slug|default:'' }}"
+                       data-category-url="{% if category.slug %}{% url 'partners:sales_by_category' category.slug %}{% else %}{% url 'partners:sales_by_id' category.id %}{% endif %}">
+                        <span class="category-icon" style="background: {{ category.color|default:'#1B66D7' }};">
+                            {{ category.icon }}
+                        </span>
+                        <span class="category-name">{{ category.name }}</span>
+                    </a>
                     {% empty %}
-                        <p>Категории пока не добавлены.</p>
+                    <p>Категории пока не добавлены.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -658,9 +657,7 @@
 <div id="productModal" class="sales-modal hidden" aria-hidden="true">
     <div class="sales-modal__backdrop modal-overlay"></div>
     <div class="sales-modal__card">
-        <button type="button"
-                class="modal-close-btn modal-close"
-                aria-label="Закрыть">×</button>
+        <button type="button" class="modal-close-btn modal-close" aria-label="Закрыть">×</button>
 
         <div class="sales-modal__image">
             <div id="modalImage" class="modal-visual-placeholder">🛍</div>
@@ -676,11 +673,7 @@
                     <span class="stat-label">предложений</span>
                 </div>
             </div>
-            <a id="modalLink"
-               href="#"
-               target="_blank"
-               rel="noopener"
-               class="btn-primary-large">
+            <a id="modalLink" href="#" target="_blank" rel="noopener" class="btn-primary-large">
                 Перейти к предложению
                 <span class="btn-arrow">→</span>
             </a>
