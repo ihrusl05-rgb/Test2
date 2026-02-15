@@ -1,0 +1,308 @@
+[
+    {
+        "model": "partners.product",
+        "pk": 1,
+        "fields": {
+            "name": "Корпоративный интернет 100 Мбит/с",
+            "slug": "internet",
+            "description": "",
+            "image": "products/fotor_creation_2026-02-06.jpg",
+            "price": "1500.00",
+            "quantity": 50,
+            "category": 2,
+            "marketplace_url": "https://www.ufanet.ru/",
+            "image_url": "",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 2,
+        "fields": {
+            "name": "Камера \"Супер\"",
+            "slug": "kamera-super",
+            "description": "Стоимость камеры по акции до 28.02.2026",
+            "image": "products/ideogram-v3.0_Профессиональная_товарная_фотокарточка_IP-к-0.jpg",
+            "price": "2350.00",
+            "quantity": 230,
+            "category": 3,
+            "marketplace_url": "https://www.ufanet.ru/ufa/kvartira/videonablyudenie/",
+            "image_url": "",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 4,
+        "fields": {
+            "name": "Уфанет ТВ",
+            "slug": "ufanet-tv",
+            "description": "Удобный способ обеспечить доступ к цифровому телевидению в любых коммерческих помещениях: от офисов до гостиниц и кафе.",
+            "image": "",
+            "price": "500.00",
+            "quantity": 200,
+            "category": 2,
+            "marketplace_url": "https://business.ufanet.ru/smb/utv",
+            "image_url": "https://optim.tildacdn.com/tild3861-6135-4131-a266-643462333935/-/resize/491x/-/format/webp/__2.png.webp",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 5,
+        "fields": {
+            "name": "IP-телефония для офиса",
+            "slug": "ip-telefoniya-dlya-ofisa",
+            "description": "Обеспечьте клиентам быструю связь с вашей компанией. Организуйте удобную внутреннюю коммуникацию между сотрудниками и контролируйте качество звонков.",
+            "image": "",
+            "price": "2000.00",
+            "quantity": 30,
+            "category": 2,
+            "marketplace_url": "https://business.ufanet.ru/smb/tel",
+            "image_url": "https://optim.tildacdn.com/tild6265-3234-4934-b132-613937653937/-/resize/408x/-/format/webp/04_.png.webp",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 6,
+        "fields": {
+            "name": "Облако Mail 1ТБ c подпиской Mail Space на 1 год",
+            "slug": "oblako-mail-1tb-c-podpiskoj-mail-space-na-1-god",
+            "description": "Подписка на Облако Mail 1 ТБ на 1 год позволяет расширить память устройства и пригласить до трех человек для использования единого пространства.\r\n\r\n• Преимущества подписки\r\nОтсутствие рекламы в Почте и Облаке.\r\nМожно отправлять тяжёлые файлы до 100 ГБ.\r\nПриоритет клиента в службе поддержки.\r\n\r\nПромокод действует в аккаунте единоразово. Активация любого следующего промокода возможна только в новом аккаунте.",
+            "image": "",
+            "price": "2090.00",
+            "quantity": 100,
+            "category": 4,
+            "marketplace_url": "https://www.mvideo.ru/products/oblako-mail-1tb-c-podpiskoi-mail-space-na-1-god-6016080",
+            "image_url": "https://img.mvideo.ru/Big/small_pic/200/6016080bb.jpg",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 7,
+        "fields": {
+            "name": "Виртуальный сервер VPS",
+            "slug": "virtualnyj-server-vps",
+            "description": "•От 10 Гб доступного пространства для хранения данных\r\n•Тариф без ограничений\r\nВсего\r\nот 139руб/мес.",
+            "image": "",
+            "price": "2000.00",
+            "quantity": 40,
+            "category": 4,
+            "marketplace_url": "https://ruvds.com/ru-rub",
+            "image_url": "https://ruvds.com/wp-content/uploads/2025/10/ruvds_sticker.png",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 8,
+        "fields": {
+            "name": "Яндекс Диск",
+            "slug": "rezervnoe-kopirovanie-dannyh",
+            "description": "Загружайте файлы в безопасное облачное хранилище, которое всегда будет под рукой от 191",
+            "image": "",
+            "price": "191.00",
+            "quantity": 60,
+            "category": 4,
+            "marketplace_url": "https://360.yandex.ru/disk/",
+            "image_url": "https://www.azone-it.ru/sites/all/themes/blogger_theme/images/Kopirovanie.jpg",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 9,
+        "fields": {
+            "name": "Wi-Fi роутер для офиса SNR-RT622-G41 AX2 NAG",
+            "slug": "wi-fi-router-dlya-ofisa-snr-rt622-g41-ax2-nag",
+            "description": "• 2-диапазонный роутер\r\n• Номинальная скорость: до 1000 Мбит/с\r\n​• Поддержка MIMO",
+            "image": "",
+            "price": "4250.00",
+            "quantity": 50,
+            "category": 5,
+            "marketplace_url": "https://www.ufanet.ru/ufa/kvartira/internet/",
+            "image_url": "https://www.ufanet.ru/media/core/img/blocks/image_-_2025-08-01T143141.865_7ye2y37.png",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 10,
+        "fields": {
+            "name": "Сервер HPE ProLiant DL380 Gen10+ S-4309Y 2U Rack/1x",
+            "slug": "server-hpe-proliant-dl380-gen10-s-4309y-2u-rack1x",
+            "description": "Сервер HPE ProLiant DL380 Gen10 обеспечивает максимальную безопасность, производительность и возможности расширения. Все это при наличии комплексной гарантии делает его идеальным решением для любой серверной среды. Привыкайте к самой надежной вычислительной платформе в отрасли. Сервер HPE ProLiant DL380 Gen10 предназначен для сокращения расходов и упрощения работы. Масштабируемые процессоры семейства Intel® Xeon® Scalable позволяют увеличить производительность на 71 % и использовать на 27 % больше ядер. Кроме того, память DDR4 HPE SmartMemory со скоростью 2666 млн передач в секунду и пространством до 3,0 Тбайт работает на 11 % быстрее, чем 2400 млн передач в секунду. Система поддерживает SAS 12 Гбит/с, а также до 20 накопителей NVMe, а также ряд различных вычислительных решений. Память HPE Persistent Memory, оптимизированная для серверов HPE ProLiant, обеспечивает исключительный уровень производительности для баз данных и аналитических рабочих нагрузок. Сервер прост в развертывании и подходит для работы как базовых, так и критически важных приложений",
+            "image": "",
+            "price": "186393.00",
+            "quantity": 5,
+            "category": 5,
+            "marketplace_url": "https://servermall.ru/catalog/servers/hpe-proliant-dl380-gen10-12lff/",
+            "image_url": "https://servermall.ru/upload/resize_cache/format_converted/144f2822f75f31c6227d2815fbb1269f.webp",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 11,
+        "fields": {
+            "name": "Рабочая станция Dell OptiPlex",
+            "slug": "rabochaya-stanciya-dell-optiplex",
+            "description": "Цена по запросу \r\n\r\nВысокопроизводительный расширяемый ПК промышленного класса, устойчивый к температурным воздействиям и обеспечивающий эффективность управления",
+            "image": "",
+            "price": "0.00",
+            "quantity": 15,
+            "category": 5,
+            "marketplace_url": "https://www.cleverkey.ru/catalog/dell/rabochie-stancii-dell/optiplex/optiplex-xe3",
+            "image_url": "https://www.cleverkey.ru/upload/iblock/50c/50c45feb33b73ad79bf644c476b70178.jpg",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 12,
+        "fields": {
+            "name": "Лицензия Microsoft Office 365",
+            "slug": "licenziya-microsoft-office-365",
+            "description": "",
+            "image": "",
+            "price": "600.00",
+            "quantity": 150,
+            "category": 6,
+            "marketplace_url": "https://www.microsoft.com/ru-ru/microsoft-365",
+            "image_url": "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/1032353-M365-Accordion-01-800x513?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=1300&qlt=100&fit=constrain",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 13,
+        "fields": {
+            "name": "CRM-система для малого бизнеса",
+            "slug": "crm-sistema-dlya-malogo-biznesa",
+            "description": "Рабочее пространство\r\n399 р. / за пользователя / в месяц\r\nТаск-менеджер\r\n190 р. / за пользователя / в месяц\r\nБаза знаний\r\n60 р. / за пользователя / в месяц\r\nCRM\r\n60 р. / за пользователя / в месяц",
+            "image": "",
+            "price": "3545.00",
+            "quantity": 50,
+            "category": 6,
+            "marketplace_url": "https://app.weeek.net/",
+            "image_url": "https://weeek.net/static/index/notifications/notifications.png",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 14,
+        "fields": {
+            "name": "Антивирус для бизнеса",
+            "slug": "antivirus-dlya-biznesa",
+            "description": "Все больше коммерческих операций выполняется в электронной форме, поэтому необходимо следить за безопасностью каждого сервера, ноутбука и мобильного устройства в вашей сети.",
+            "image": "",
+            "price": "32919.00",
+            "quantity": 80,
+            "category": 6,
+            "marketplace_url": "https://www.kaspersky.ru/small-to-medium-business-security/endpoint-select",
+            "image_url": "https://rg.ru/uploads/images/2023/11/12/11p_niz-antivirus_190.jpg",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 15,
+        "fields": {
+            "name": "3 пиццы 25 см за 1399 руб",
+            "slug": "3-piccy-25-sm-za-1399-rub",
+            "description": "АКЦИЯ ДЕЙСТВУЕТ ТОЛЬКО НА ДОСТАВКУ И САМОВЫВОЗ\r\n\r\nСостав набора:\r\n• Карбонара\r\n• Капричиоза\r\n• Дьябло",
+            "image": "",
+            "price": "1399.00",
+            "quantity": 50,
+            "category": 8,
+            "marketplace_url": "https://bazilico-pizza.ru/3-pitstsy-25-sm-za-599-rub",
+            "image_url": "https://bazilico-pizza.ru/image/cache/catalog/products/3-pitstsy-25-sm-za-499-rub-500x500.webp",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 16,
+        "fields": {
+            "name": "Роллы с лососем – всего 149 рублей",
+            "slug": "rolly-s-lososem-vsego-149-rublej",
+            "description": "Наслаждайтесь любимыми роллами в зале ресторана по невероятной цене – всего 149 рублей за порцию!",
+            "image": "",
+            "price": "0.00",
+            "quantity": 0,
+            "category": 8,
+            "marketplace_url": "https://ufa.bulkaman.ru/sales/rolly-s-lososem-po-spets-tsene/",
+            "image_url": "https://ufa.bulkaman.ru/upload/iblock/d9e/7sbzwx65l69l5jvif0yzhdx79yah7h28.jpg",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 17,
+        "fields": {
+            "name": "Холодный цезарь ролл в подарок",
+            "slug": "holodnyj-cezar-roll-v-podarok",
+            "description": "БулкаМен любит радовать своих друзей вкусными подарками. Выбирайте промокоды по вкусу)\r\n\r\nХолодный цезарь ролл в подарок. При заказе от 999 рублей",
+            "image": "",
+            "price": "0.00",
+            "quantity": 0,
+            "category": 8,
+            "marketplace_url": "https://ufa.bulkaman.ru/menu/rolly/",
+            "image_url": "https://ufa.bulkaman.ru/upload/iblock/edf/edf0bf5cafd064031974a9de5cf25360.jpg?152709014563988",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    },
+    {
+        "model": "partners.product",
+        "pk": 18,
+        "fields": {
+            "name": "Умная система контроля и управления доступом",
+            "slug": "umnaya-sistema-kontrolya-i-upravleniya-dostupom",
+            "description": "Позволяет ограничить доступ для посторонних лиц на выбранную территорию. Уведомляет о несанкционированном открытии дверей.",
+            "image": "",
+            "price": "1000.00",
+            "quantity": 0,
+            "category": 3,
+            "marketplace_url": "https://business.ufanet.ru/smb/scud",
+            "image_url": "https://optim.tildacdn.com/tild6139-3064-4139-a434-313736333364/-/resize/462x/-/format/webp/09_.png.webp",
+            "count_offers": 0,
+            "is_active": true,
+            "order": 0
+        }
+    }
+]

@@ -550,12 +550,14 @@
         </div>
     </header>
 
-    <div class="search-row">
-        <input id="searchInput" type="search" class="search-input" placeholder="Поиск по товарам и описанию">
-    </div>
+    <form class="search-row" method="get">
+        <input id="productSearchInput" name="q" value="{{ search_query|default:'' }}" type="search" class="search-input" placeholder="Поиск по товарам и описанию">
+    </form>
 
     <!-- Форма фильтров -->
+
     <!-- Форма фильтров -->
+
     <div class="sales-layout">
 
         <section class="products-column">
@@ -599,23 +601,23 @@
                 {% endfor %}
             </div>
 
-            {# Пагинация - ИСПРАВЛЕНО с сохранением параметров #}
+            {# Пагинация#}
             {% if products.paginator.num_pages > 1 %}
             <nav class="pagination" aria-label="Пагинация">
                 {% if products.has_previous %}
-                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ products.previous_page_number }}">Назад</a>
+                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}page={{ products.previous_page_number }}">Назад</a>
                 {% endif %}
 
                 {% for num in products.paginator.page_range %}
                     {% if num == products.number %}
                     <span class="pagination-link is-active">{{ num }}</span>
                     {% else %}
-                    <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}page={{ num }}">{{ num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if products.has_next %}
-                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}page={{ products.next_page_number }}">Вперед</a>
+                <a class="pagination-link" href="?{% if request.GET.on_sale %}on_sale={{ request.GET.on_sale }}&{% endif %}{% if request.GET.order_by %}order_by={{ request.GET.order_by }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}page={{ products.next_page_number }}">Вперед</a>
                 {% endif %}
             </nav>
             {% endif %}
@@ -683,5 +685,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'partners/js/partners.js' %}"></script>
+<script src="{% static 'partners/js/partners.js' %}?v=20260215"></script>
 {% endblock %}

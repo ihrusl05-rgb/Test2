@@ -1,38 +1,52 @@
-let currentCategory = 0;
-let currentSearchQuery = "";
-
 document.addEventListener("DOMContentLoaded", () => {
-    initCategoryState();
     initSearch();
     initCategoryLinks();
     initProductClicks();
     initModalControls();
-    filterProducts();
 });
 
-function initCategoryState() {
-    const active = document.querySelector(".category-card.active");
-    currentCategory = active ? parseInt(active.dataset.categoryId || "0", 10) : 0;
-}
-
 function initSearch() {
-    const input = document.getElementById("searchInput");
+    const input =
+        document.getElementById("productSearchInput") ||
+        document.querySelector('input[name="q"]');
     if (!input) return;
 
     input.addEventListener(
         "input",
         debounce((e) => {
-            currentSearchQuery = (e.target.value || "").toLowerCase().trim();
-            filterProducts();
-        }, 180),
+            applySearchQuery((e.target.value || "").trim());
+        }, 350),
     );
 
     input.addEventListener("keydown", (e) => {
-        if (e.key !== "Escape") return;
-        input.value = "";
-        currentSearchQuery = "";
-        filterProducts();
+        if (e.key === "Escape") {
+            input.value = "";
+            applySearchQuery("");
+            return;
+        }
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            applySearchQuery((input.value || "").trim());
+        }
     });
+}
+
+function applySearchQuery(query) {
+    const current = new URL(window.location.href);
+    const normalizedQuery = query.trim();
+    const currentQuery = (current.searchParams.get("q") || "").trim();
+    if (normalizedQuery === currentQuery) return;
+
+    if (normalizedQuery) {
+        current.searchParams.set("q", normalizedQuery);
+    } else {
+        current.searchParams.delete("q");
+    }
+
+    // Any new search should start from the first page.
+    current.searchParams.delete("page");
+    window.location.assign(current.toString());
 }
 
 function initCategoryLinks() {
@@ -49,54 +63,6 @@ function initCategoryLinks() {
 
 function isModifiedClick(e) {
     return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
-}
-
-function filterProducts() {
-    const cards = document.querySelectorAll(".product-card");
-    let visibleCount = 0;
-
-    cards.forEach((card) => {
-        const categoryId = parseInt(card.dataset.categoryId || "0", 10);
-        const name = (card.querySelector(".product-name")?.textContent || "").toLowerCase();
-        const desc = (card.querySelector(".product-description")?.textContent || "").toLowerCase();
-
-        const categoryMatch = currentCategory === 0 || categoryId === currentCategory;
-        const searchMatch =
-            currentSearchQuery.length === 0 ||
-            name.includes(currentSearchQuery) ||
-            desc.includes(currentSearchQuery);
-
-        const show = categoryMatch && searchMatch;
-        card.style.display = show ? "block" : "none";
-        if (show) visibleCount += 1;
-    });
-
-    updateResultsCounter(visibleCount);
-    updateEmptyState(visibleCount);
-}
-
-function updateResultsCounter(count) {
-    const counter = document.getElementById("resultsCounter");
-    if (!counter) return;
-    counter.textContent = `Найдено ${count} предложений`;
-}
-
-function updateEmptyState(visibleCount) {
-    const grid = document.getElementById("productsGrid");
-    if (!grid) return;
-
-    let empty = grid.querySelector(".empty-state-modern.js-empty-state");
-    if (visibleCount === 0) {
-        if (!empty) {
-            empty = document.createElement("div");
-            empty.className = "empty-state-modern js-empty-state";
-            empty.innerHTML = "<h3>Ничего не найдено</h3><p>Попробуйте изменить запрос.</p>";
-            grid.appendChild(empty);
-        }
-        empty.style.display = "block";
-    } else if (empty) {
-        empty.style.display = "none";
-    }
 }
 
 function initProductClicks() {

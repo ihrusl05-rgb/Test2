@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Category, Product
+from .utils import q_search
 
 def sales_page(request, category_slug=None, category_id=None):
     """Страница товаров и категорий"""
@@ -20,8 +21,14 @@ def sales_page(request, category_slug=None, category_id=None):
         category = get_object_or_404(Category, id=category_id)
         products = products.filter(category=category)
 
-    #Пагинация
-    paginator = Paginator(products, 4) # Показывать по 4 товаров на странице
+    """ Поиск товаров """
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        products = q_search(search_query)
+
+
+    """ Тестовая пагинация """
+    paginator = Paginator(products, 4)
     page_number = request.GET.get("page", 1)
     products = paginator.get_page(page_number)
 
@@ -29,6 +36,7 @@ def sales_page(request, category_slug=None, category_id=None):
         'categories': categories,
         'products': products,
         'selected_category_slug': selected_category_slug,
+        'search_query': search_query,
     }
     return render(request, 'partners/sales.html', context)
 
