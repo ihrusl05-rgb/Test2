@@ -1,4 +1,4 @@
-{% extends 'partners/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 
@@ -303,7 +303,7 @@
 
         const formData = new FormData(form);
 
-        fetch('{% url "partners:login" %}', {
+        fetch('{% url "users:login" %}', {
             method: 'POST',
             body: formData,
             headers: {
