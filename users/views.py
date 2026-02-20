@@ -1,21 +1,39 @@
+﻿from django.contrib import auth
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
+
+from users.forms import UserLoginForms
 
 
 """Страница входа партнеров"""
 def login_page(request):
+    if request.method == 'POST':
+        form = UserLoginForms(data=request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = auth.authenticate(username = username, password = password)
+            if user:
+                auth.login(request,user)
+                return HttpResponseRedirect(reverse('partners:sales'))
+    else:
+        form = UserLoginForms()
+
     context  = {
+    'form' : form,
     'title': 'Партнеры',
     'content': 'Уфанефть'
     }
     return render(request, 'users/login.html', context)
 
 
-def registration(request):
-    context  = {
-    'title': 'Партнеры',
-    'content': 'Уфанефть'
-    }
-    return render(request, 'users/registration.html', context)
+# """ def registration(request):
+#     context  = {
+#     'title': 'Партнеры',
+#     'content': 'Уфанефть'
+#     }
+#     return render(request, 'users/registration.html', context)
 
 
 def profile(request):

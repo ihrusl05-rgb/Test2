@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -20,9 +20,6 @@
     margin: 0 ;
     }
 
-    body::before {
-    content: none !important;
-}
 
     body::before {
     content: '';
@@ -45,10 +42,8 @@
     {% endblock %}
 
     {# основной контент страницы #}
-    <main>
         {% block content %}
         {% endblock %}
-    </main>
 
     {# футер сайта (если понадобится) #}
 <footer class="footer" style="
@@ -78,7 +73,7 @@
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
             <a href="#" style="color: #a0a0a0; text-decoration: none;">Условия использования</a>
             <a href="#" style="color: #a0a0a0; text-decoration: none;">Конфиденциальность</a>
-            <a href="/about" style="color: #a0a0a0; text-decoration: none;">О компании</a>
+            <a {% url 'users:about' %} style="color: #a0a0a0; text-decoration: none;">О компании</a>
         </div>
 
         <div style="display: flex; gap: 16px;">
