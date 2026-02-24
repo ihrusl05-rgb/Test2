@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Django/runtime artifacts
+media/
+staticfiles/
+*.log
+
+# Env and local overrides
+.env
+.env.*
+!.env.example
+docker-compose.override.yml
+
+# IDE/editor
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
