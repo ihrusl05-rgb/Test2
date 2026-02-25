@@ -36,7 +36,7 @@
 
     {% block extra_css %}{% endblock %}
 </head>
-<script src="{% static 'partners/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'partners/js/bootstrap.bundle.js' %}"></script>
 <body>
     <div class="page-container">
 
@@ -74,7 +74,7 @@
         </div>
 
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-            <a href="{% url "users:registration"%}" style="color: #4ecdc4; text-decoration: none;">На главную</a>
+            <a href="{% url "index"%}" style="color: #4ecdc4; text-decoration: none;">На главную</a>
             <a href="{% url "users:registration"%}" style="color: #4ecdc4; text-decoration: none;">Регистрация</a>
             <a href="{% url "admin:index" %}" style="color: #4ecdc4; text-decoration: none;">Админ панель</a>
             <a href="{% url "users:about" %}" style="color: #4ecdc4; text-decoration: none;">О компании</a>
@@ -102,7 +102,7 @@
 </footer>
     </div>
     {% block extra_js %}{% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+{% comment %}<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 {% comment %} <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.3/dist/js/coreui.min.js" integrity="sha384-eaf/aooEyB34Dibp3gcjhvn4i9UJdaoubxPpJFDc9BJc7ElrpST+3oP84x76fUpf" crossorigin="anonymous"></script> {% endcomment %}
 </body>
 </html>

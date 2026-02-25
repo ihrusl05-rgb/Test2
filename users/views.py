@@ -39,14 +39,14 @@ def registration(request):
     return render(request, "users/registration.html", context)
 
 
-# def profile(request):
-#     context  = {
-#     'title': 'Партнеры',
-#     'content': 'Уфанефть'
-#     }
-#     return render(request, 'users/profile.html', context)
+def index(request):
+    return render(request, 'index.html')
 
-"""О нас"""
+
+def logout_view(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse('index'))
+
 
 
 def about(request):
