@@ -9,10 +9,37 @@
         href="{% static 'partners/css/coreui.min.css' %}">
 </head>
 
-<body class="c-app">
+
+
+<nav class="navbar navbar-expand-lg  style="background-color: rgba(150, 202, 219, 0.85);" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Панель управления</a>
+    <button class="navbar-toggler" type="button" data-coreui-toggle="collapse" data-coreui-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href = "{% url "users:login" %}">Авторизоваться</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href = "/admin">Админка</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
 
  <button type="button" class="btn btn-danger">Danger</button>
 
-  <script src="{% static 'partners/js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.3/dist/js/coreui.min.js" integrity="sha384-eaf/aooEyB34Dibp3gcjhvn4i9UJdaoubxPpJFDc9BJc7ElrpST+3oP84x76fUpf" crossorigin="anonymous"></script>
 </body>
 </html>
+
