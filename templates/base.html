@@ -74,7 +74,7 @@
         </div>
 
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-            <a href="#" style="color: #a0a0a0; text-decoration: none;">Регистрация</a>
+            <a href="{% url "users:registration"%}" style="color: #a0a0a0; text-decoration: none;">Регистрация</a>
             <a href="{% url "admin:index" %}" style="color: #a0a0a0; text-decoration: none;">Админ панель</a>
             <a {% url 'users:about' %} style="color: #a0a0a0; text-decoration: none;">О компании</a>
         </div>
