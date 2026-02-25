@@ -333,7 +333,7 @@
     .sales-modal {
         position: fixed;
         inset: 0;
-        z-index: 5000;
+        z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -341,19 +341,20 @@
     }
 
     .sales-modal.hidden {
-        display: none;
+        display: none !important;
     }
 
     .sales-modal__backdrop {
-        position: absolute;
+        position: fixed;
         inset: 0;
         background: rgba(3, 10, 20, 0.72);
         backdrop-filter: blur(3px);
+        z-index: 9998;
     }
 
     .sales-modal__card {
         position: relative;
-        z-index: 2;
+        z-index: 10000;
         width: min(820px, 100%);
         border-radius: 18px;
         overflow: hidden;
@@ -388,7 +389,8 @@
 
     .sales-modal__content {
         padding: 22px 22px 20px;
-        overflow: auto;
+        overflow-y: auto;
+        max-height: 80vh;
     }
 
     .modal-close-btn {
@@ -562,9 +564,17 @@
     <div class="sales-layout">
 
         <section class="products-column">
-            <div id="productsGrid" class="products-grid" data-product-api-template="{% url 'partners:product_api' 0 %}">
+            <div id="productsGrid" class="products-grid">
                 {% for product in products %}
-                <article class="product-card" data-product-id="{{ product.id }}" data-category-id="{{ product.category_id }}">
+                <article class="product-card" 
+                    data-product-id="{{ product.id }}" 
+                    data-product-name="{{ product.name }}"
+                    data-product-description="{{ product.description|default:'Описание появится позже.'|escape }}"
+                    data-product-price="{{ product.price|default:'Цена по запросу' }}"
+                    data-product-image="{% if product.image %}{{ product.image.url }}{% elif product.image_url %}{{ product.image_url }}{% else %}{% endif %}"
+                    data-product-marketplace="{{ product.marketplace_url|default:'#' }}"
+                    data-product-offers="{{ product.count_offers }}"
+                    data-category-id="{{ product.category_id }}">
                     <div class="product-image-wrap">
                         {% if product.image %}
                         <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -685,5 +695,6 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}Н
+{% block extra_js %}
+<script src="{% static 'partners/js/partners.js' %}"></script>
 {% endblock %}

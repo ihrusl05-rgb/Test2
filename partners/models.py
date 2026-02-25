@@ -6,8 +6,8 @@ class Category(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name ='Название категории')
     slug = models.SlugField(max_length=200,unique=True, blank=True, null=True, verbose_name ='URL категория')
     description = models.TextField(blank=True, null=True, verbose_name ='Описание категории')
-    icon = models.CharField(max_length=50, default="📦")  # emoji или класс иконки
-    color = models.CharField(max_length=7, default="#FF6B00")  # hex цвет
+    icon = models.CharField(max_length=50, default="📦")
+    color = models.CharField(max_length=7, default="#FF6B00")
     order = models.IntegerField(default=0)
 
     class Meta:
@@ -46,6 +46,5 @@ class Product(models.Model):
         verbose_name_plural = "Товары"
 
 
-# Форматирование ID с ведущими нулями, например 001, 002, ... 010, 011 и т.д.
     def display_id(self):
         return f"{self.id:03}"

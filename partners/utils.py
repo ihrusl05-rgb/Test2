@@ -13,11 +13,7 @@ def q_search(query):
     if query.isdigit() and len(query) <= 5:
         return Product.objects.filter(id=int(query))
 
-    
-    return Product.objects.filter(
-        Q(name__icontains=query) |
-        Q(description__icontains=query)
-    )
+    return Product.objects.filter(Q(name__icontains=query)|Q(description__icontains=query))
 #    #searchrank
 #     vector = SearchVector('name', 'description')
 #     query = SearchQuery(query)

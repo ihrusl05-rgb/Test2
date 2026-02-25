@@ -35,7 +35,7 @@ def registration(request):
     else:
         form = UserRegistrationForm()
 
-    context = {"title": "Партнеры", "content": "Уфанефть", "form": "form"}
+    context = {"title": "Партнеры", "content": "Уфанефть", "form": form}
     return render(request, "users/registration.html", context)
 
 
