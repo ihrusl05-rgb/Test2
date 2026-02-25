@@ -1,4 +1,4 @@
-п»їfrom django.contrib import auth
+from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -6,7 +6,7 @@ from django.urls import reverse
 from users.forms import UserLoginForms, UserRegistrationForm
 
 
-"""РЎС‚СЂР°РЅРёС†Р° РІС…РѕРґР° РїР°СЂС‚РЅРµСЂРѕРІ"""
+"""Страница входа партнеров"""
 
 
 def login_page(request):
@@ -22,7 +22,7 @@ def login_page(request):
     else:
         form = UserLoginForms()
 
-    context = {"form": form, "title": "РџР°СЂС‚РЅРµСЂС‹", "content": "РЈС„Р°РЅРµС„С‚СЊ"}
+    context = {"form": form, "title": "Партнеры", "content": "Уфанефть"}
     return render(request, "users/login.html", context)
 
 
@@ -35,24 +35,24 @@ def registration(request):
     else:
         form = UserRegistrationForm()
 
-    context = {"title": "РџР°СЂС‚РЅРµСЂС‹", "content": "РЈС„Р°РЅРµС„С‚СЊ", "form": "form"}
+    context = {"title": "Партнеры", "content": "Уфанефть", "form": form}
     return render(request, "users/registration.html", context)
 
 
 # def profile(request):
 #     context  = {
-#     'title': 'РџР°СЂС‚РЅРµСЂС‹',
-#     'content': 'РЈС„Р°РЅРµС„С‚СЊ'
+#     'title': 'Партнеры',
+#     'content': 'Уфанефть'
 #     }
 #     return render(request, 'users/profile.html', context)
 
-"""Рћ РЅР°СЃ"""
+"""О нас"""
 
 
 def about(request):
     context = {
-        "title": "РџР°СЂС‚РЅРµСЂС‹-Рѕ РЅР°СЃ",
-        "content": "Рћ РЅР°СЃ",
-        "text_on_page": "РЈС„Р°РЅРµС„С‚СЊ - СЌС‚Рѕ СЌРєРѕСЃРёСЃС‚РµРјР° РґР»СЏ РїР°СЂС‚РЅРµСЂРѕРІ Рё РєР»РёРµРЅС‚РѕРІ, РєРѕС‚РѕСЂР°СЏ РѕР±СЉРµРґРёРЅСЏРµС‚ РІ СЃРµР±Рµ С€РёСЂРѕРєРёР№ СЃРїРµРєС‚СЂ СѓСЃР»СѓРі Рё РїСЂРѕРґСѓРєС‚РѕРІ. РќР°С€Р° РјРёСЃСЃРёСЏ - СЃРѕР·РґР°РІР°С‚СЊ С†РµРЅРЅРѕСЃС‚СЊ РґР»СЏ РЅР°С€РёС… РїР°СЂС‚РЅРµСЂРѕРІ, РїСЂРµРґРѕСЃС‚Р°РІР»СЏСЏ РёРј РґРѕСЃС‚СѓРї Рє РёРЅРЅРѕРІР°С†РёРѕРЅРЅС‹Рј СЂРµС€РµРЅРёСЏРј Рё РїРѕРґРґРµСЂР¶РєРµ РЅР° РєР°Р¶РґРѕРј СЌС‚Р°РїРµ СЃРѕС‚СЂСѓРґРЅРёС‡РµСЃС‚РІР°.",
+        "title": "Партнеры-о нас",
+        "content": "О нас",
+        "text_on_page": "Уфанефть - это экосистема для партнеров и клиентов, которая объединяет в себе широкий спектр услуг и продуктов. Наша миссия - создавать ценность для наших партнеров, предоставляя им доступ к инновационным решениям и поддержке на каждом этапе сотрудничества.",
     }
     return render(request, "users/about.html", context)
