@@ -5,7 +5,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Category, Product
 from .utils import q_search
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='/login/')
 def sales_page(request, category_slug=None, category_id=None):
     """Страница товаров и категорий"""
     categories = Category.objects.all()
@@ -39,27 +41,6 @@ def sales_page(request, category_slug=None, category_id=None):
         'search_query': search_query,
     }
     return render(request, 'partners/sales.html', context)
-
-@require_http_methods(["GET"])
-def get_product_details(request, product_id):
-    """API для получения деталей товара (для модального окна)"""
-    try:
-        product = Product.objects.get(id=product_id, is_active=True,)
-        data = {
-            'success': True,
-            'name': product.name,
-            'description': product.description,
-            'count_offers': product.count_offers,
-            'marketplace_url': product.marketplace_url,
-            'image_url': product.image.url if product.image else (product.image_url or ""),
-        }
-    except Product.DoesNotExist:
-        data = {
-            'success': False,
-            'message': 'Товар не найден'
-        }
-
-    return JsonResponse(data)
 
 
 def test_page(request):
